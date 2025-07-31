@@ -1,0 +1,183 @@
+name: Docker Build and Test
+
+on:
+  push:
+      branches: [ main ]
+        pull_request:
+            branches: [ main ]
+
+            jobs:name: Docker Build and Test
+
+            on:
+              push:
+                  branches: [ main ]
+                    pull_request:
+                        branches: [ main ]
+
+                        jobs:
+                          build:name: Docker Build and Test
+
+                          on:
+                            push:
+                                branches: [ main ]
+                                  pull_request:
+                                      branches: [ main ]
+
+                                      jobs:
+                                        build:
+                                            runs-on: ubuntu-latest
+                                                steps:
+                                                    - name: Checkout code
+                                                          uses: actions/checkout@v2
+                                                          
+                              runs-on: ubuntu-latest
+                                  steps:
+                                      - name: Checkout code
+                                            uses: actions/checkout@v2name: Docker Build and Test
+
+                                            on:
+                                              push:
+                                                  branches: [ main ]
+                                                    pull_request:
+                                                        branches: [ main ]
+name: Docker Build and Test
+
+on:
+  push:
+      branches: [ main ]
+        pull_request:
+            branches: [ main ]
+
+            jobs:
+              build:
+                  runs-on: ubuntu-latest
+                      steps:
+                          - name: Checkout code
+                                uses: actions/checkout@v2
+
+                                    - name: Set up Docker Buildx
+                                          uses: docker/setup-buildx-action@v1
+
+                                              - name: Cache Docker layers
+                                                    uses: actions/cache@v2
+                                                          with:
+                                                                  path: /tmp/.buildx-cache
+                                                                          key: ${{ runner.os }}-buildx-${{ github.sha }}
+                                                                                  restore-keys: |
+                                                                                            ${{ runner.os }}-buildx-
+
+                                                                                                - name: Build Docker image
+                                                                                                      run: |
+                                                                                                              docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                                                                                                                                   --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+                                                                                                                                                        -t my-image .
+                                                                                                                                                        
+                                                                                                                                                            - name: Test Docker image
+                                                                                                                                                                  run: |
+                                                                                                                                                                          docker run --rm my-image pytest
+                                                                                                                                                                          
+                                                                                                                                                                              - name: Push Docker image
+                                                                                                                                                                                    if: github.ref == 'refs/heads/main'
+                                                                                                                                                                                          run: |
+                                                                                                                                                                                                  docker tag my-image myorg/my-image:latest
+                                                                                                                                                                                                          echo ${{ secrets.DOCKERHUB_USERNAME }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+                                                                                                                                                                                                                  docker push myorg/my-image:latest
+                                                                                                                                                                                                                  
+                                                        jobs:
+                                                          build:
+                                                              runs-on: ubuntu-latest
+                                                                  steps:
+                                                                      - name: Checkout code
+                                                                            uses: actions/checkout@v2
+
+                                                                                - name: Set up Docker Buildx
+                                                                                      uses: docker/setup-buildx-action@v1
+
+                                                                                          - name: Cache Docker layers
+                                                                                                uses: actions/cache@v2
+                                                                                                      with:
+                                                                                                              path: /tmp/.buildx-cache
+                                                                                                                      key: ${{ runner.os }}-buildx-${{ github.sha }}
+                                                                                                                              restore-keys: |
+                                                                                                                                        ${{ runner.os }}-buildx-
+                                                                                                                                        
+                                                                                                                                            - name: Build Docker image
+                                                                                                                                                  run: |
+                                                                                                                                                          docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                                                                                                                                                                               --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+                                                                                                                                                                                                    -t my-image .
+                                                                                                                                                                                                    
+                                                                                                                                                                                                        - name: Test Docker image
+                                                                                                                                                                                                              run: |
+                                                                                                                                                                                                                      docker run --rm my-image pytest
+                                                                                                                                                                                                                      
+                                                                                                                                                                                                                          - name: Push Docker image
+                                                                                                                                                                                                                                if: github.ref == 'refs/heads/main'
+                                                                                                                                                                                                                                      run: |
+                                                                                                                                                                                                                                              docker tag my-image myorg/my-image:latest
+                                                                                                                                                                                                                                                      echo ${{ secrets.DOCKERHUB_USERNAME }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+                                                                                                                                                                                                                                                              docker push myorg/my-image:latest
+                                                                                                                                                                                                                                                              
+
+                                                - name: Set up Docker Buildx
+                                                      uses: docker/setup-buildx-action@v1
+
+                                                          - name: Cache Docker layers
+                                                                uses: actions/cache@v2
+                                                                      with:
+                                                                              path: /tmp/.buildx-cache
+                                                                                      key: ${{ runner.os }}-buildx-${{ github.sha }}
+                                                                                              restore-keys: |
+                                                                                                        ${{ runner.os }}-buildx-
+                                                                                                        
+                                                                                                            - name: Build Docker image
+                                                                                                                  run: |
+                                                                                                                          docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                                                                                                                                               --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+                                                                                                                                                                    -t my-image .
+                                                                                                                                                                    
+                                                                                                                                                                        - name: Test Docker image
+                                                                                                                                                                              run: |
+                                                                                                                                                                                      docker run --rm my-image pytest
+                                                                                                                                                                                      
+                                                                                                                                                                                          - name: Push Docker image
+                                                                                                                                                                                                if: github.ref == 'refs/heads/main'
+                                                                                                                                                                                                      run: |
+                                                                                                                                                                                                              docker tag my-image myorg/my-image:latest
+                                                                                                                                                                                                                      echo ${{ secrets.DOCKERHUB_USERNAME }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+                                                                                                                                                                                                                              docker push myorg/my-image:latest
+                                                                                                                                                                                                                              
+              build:
+                  runs-on: ubuntu-latest
+                      steps:
+                          - name: Checkout code
+                                uses: actions/checkout@v2
+
+                                    - name: Set up Docker Buildx
+                                          uses: docker/setup-buildx-action@v1
+
+                                              - name: Cache Docker layers
+                                                    uses: actions/cache@v2
+                                                          with:
+                                                                  path: /tmp/.buildx-cache
+                                                                          key: ${{ runner.os }}-buildx-${{ github.sha }}
+                                                                                  restore-keys: |
+                                                                                            ${{ runner.os }}-buildx-
+
+                                                                                                - name: Build Docker image
+                                                                                                      run: |
+                                                                                                              docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                                                                                                                                   --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+                                                                                                                                                        -t my-image .
+                                                                                                                                                        
+                                                                                                                                                            - name: Test Docker image
+                                                                                                                                                                  run: |
+                                                                                                                                                                          docker run --rm my-image pytest
+                                                                                                                                                                          
+                                                                                                                                                                              - name: Push Docker image
+                                                                                                                                                                                    if: github.ref == 'refs/heads/main'
+                                                                                                                                                                                          run: |
+                                                                                                                                                                                                  docker tag my-image myorg/my-image:latest
+                                                                                                                                                                                                          echo ${{ secrets.DOCKERHUB_USERNAME }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+                                                                                                                                                                                                                  docker push myorg/my-image:latest
+                                                                                                                                                                                                                  
